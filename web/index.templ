@@ -1,0 +1,17 @@
+package web
+
+templ Index(site string, posts []Post) {
+	@Layout(site, "", "") {
+		<ul class="posts">
+			for _, p := range posts {
+				<li>
+					<a href={ templ.SafeURL(p.URL()) }>{ p.Title }</a>
+					@date(p.Date)
+					if p.Description != "" {
+						<p>{ p.Description }</p>
+					}
+				</li>
+			}
+		</ul>
+	}
+}

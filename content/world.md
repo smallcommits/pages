@@ -1,5 +1,0 @@
----
-title: World
----
-
-Just world!!!

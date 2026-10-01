@@ -1,0 +1,43 @@
+package web
+
+import (
+	"embed"
+	"time"
+)
+
+//go:embed static
+var Static embed.FS
+
+func pageTitle(site, title string) string {
+	if title == "" {
+		return site
+	}
+	return title + " · " + site
+}
+
+templ Layout(site, title, description string) {
+	<!DOCTYPE html>
+	<html lang="en">
+		<head>
+			<meta charset="UTF-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+			<title>{ pageTitle(site, title) }</title>
+			if description != "" {
+				<meta name="description" content={ description }/>
+			}
+			<link rel="stylesheet" href="/static/style.css"/>
+		</head>
+		<body>
+			<header>
+				<a href="/" class="site-title">{ site }</a>
+			</header>
+			<main>
+				{ children... }
+			</main>
+		</body>
+	</html>
+}
+
+templ date(t time.Time) {
+	<time datetime={ t.Format("2006-01-02") }>{ t.Format("January 2, 2006") }</time>
+}

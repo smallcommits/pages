@@ -1,0 +1,30 @@
+package web
+
+import "time"
+
+// Post lives here rather than in package main because templates must accept it
+// and Go cannot import main.
+type Post struct {
+	Slug        string
+	Title       string
+	Date        time.Time
+	Description string
+	Draft       bool
+	Body        string // rendered HTML
+}
+
+func (p Post) URL() string {
+	return "/posts/" + p.Slug + "/"
+}
+
+templ PostPage(site string, p Post) {
+	@Layout(site, p.Title, p.Description) {
+		<article>
+			<h1>{ p.Title }</h1>
+			<p class="meta">
+				@date(p.Date)
+			</p>
+			@templ.Raw(p.Body)
+		</article>
+	}
+}
