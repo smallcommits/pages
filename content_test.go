@@ -46,11 +46,11 @@ func TestParsePost(t *testing.T) {
 func writePosts(t *testing.T, files map[string]string) string {
 	t.Helper()
 	dir := t.TempDir()
-	if err := os.MkdirAll(filepath.Join(dir, "posts"), 0o755); err != nil {
+	if err := os.MkdirAll(filepath.Join(dir, "commits"), 0o755); err != nil {
 		t.Fatal(err)
 	}
 	for name, body := range files {
-		if err := os.WriteFile(filepath.Join(dir, "posts", name), []byte(body), 0o644); err != nil {
+		if err := os.WriteFile(filepath.Join(dir, "commits", name), []byte(body), 0o644); err != nil {
 			t.Fatal(err)
 		}
 	}
@@ -112,27 +112,34 @@ func TestBuild(t *testing.T) {
 		t.Fatal(err)
 	}
 
+	if err := os.MkdirAll(filepath.Join(dir, "images"), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(dir, "images", "cat.png"), []byte("png"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+
 	posts, err := loadPosts(dir, false)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err := build(posts, "Test Blog", out); err != nil {
+	if err := build(posts, "Test Blog", dir, out); err != nil {
 		t.Fatal(err)
 	}
 
 	index := read(t, filepath.Join(out, "index.html"))
-	for _, want := range []string{`href="/posts/newer/"`, `href="/posts/older/"`, "Test Blog"} {
+	for _, want := range []string{`href="/commits/newer/"`, `href="/commits/older/"`, "Test Blog"} {
 		if !strings.Contains(index, want) {
 			t.Errorf("index.html missing %s", want)
 		}
 	}
-	if strings.Contains(index, "/posts/wip/") {
+	if strings.Contains(index, "/commits/wip/") {
 		t.Error("index.html links the draft")
 	}
-	if post := read(t, filepath.Join(out, "posts", "newer", "index.html")); !strings.Contains(post, "<td>1</td>") {
+	if post := read(t, filepath.Join(out, "commits", "newer", "index.html")); !strings.Contains(post, "<td>1</td>") {
 		t.Errorf("post page missing rendered table:\n%s", post)
 	}
-	for _, path := range []string{"404.html", "static/style.css"} {
+	for _, path := range []string{"404.html", "static/style.css", "images/cat.png"} {
 		read(t, filepath.Join(out, path))
 	}
 	for _, path := range []string{"posts/wip", "post"} {

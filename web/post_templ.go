@@ -22,7 +22,7 @@ type Post struct {
 }
 
 func (p Post) URL() string {
-	return "/posts/" + p.Slug + "/"
+	return "/commits/" + p.Slug + "/"
 }
 
 func PostPage(site string, p Post) templ.Component {

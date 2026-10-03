@@ -1,6 +1,6 @@
-# my-ssg
+# Small Commits
 
-A small static site generator for a Markdown blog, deployed to Cloudflare Pages.
+A small static site generator for a Markdown blog
 
 ## Write a post
 
@@ -9,6 +9,10 @@ A small static site generator for a Markdown blog, deployed to Cloudflare Pages.
 2. Fill in the frontmatter. `title` and `date` (`YYYY-MM-DD`) are required.
    `description` is optional. `draft: true` keeps the post out of the build.
 3. Write the body in Markdown. Tables, strikethrough, and task lists work.
+
+To add an image, put the file in `content/images/` and reference it from the
+root: `![A short description](/images/diagram.png)`. The build copies
+`content/images/` to `/images/` unchanged.
 
 Files that start with `_` are ignored.
 
@@ -22,12 +26,3 @@ just test
 
 To preview drafts, run `go run . -drafts`. Run `go run . -h` to list the other
 flags (`-content`, `-out`, `-site-title`).
-
-## Deploy
-
-Upload `dist/` to Cloudflare Pages:
-
-```sh
-just build
-npx wrangler pages deploy dist --project-name=my-blog
-```

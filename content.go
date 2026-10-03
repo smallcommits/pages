@@ -35,7 +35,7 @@ type frontmatter struct {
 
 // loadPosts reports every invalid file at once so the author can fix them in one pass.
 func loadPosts(dir string, includeDrafts bool) ([]web.Post, error) {
-	postsDir := filepath.Join(dir, "posts")
+	postsDir := filepath.Join(dir, "commits")
 	entries, err := os.ReadDir(postsDir)
 	if err != nil {
 		return nil, err
